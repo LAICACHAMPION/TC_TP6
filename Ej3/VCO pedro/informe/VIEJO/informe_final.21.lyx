@@ -1,0 +1,919 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language spanish
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 0.5cm
+\rightmargin 0.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language french
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section
+Oscilador controlado por tensión
+\end_layout
+
+\begin_layout Subsection
+Marco teórico
+\end_layout
+
+\begin_layout Standard
+Un oscilador controlado por tensión (
+\emph on
+Voltage Controlled Oscilator
+\emph default
+, o VCO) es un dispositivo cuya señal de salida tiene una frecuencia proporciona
+l a una señal de tensión a la entrada.
+ Entre sus aplicaciones más típicas se encuentran: generador de 
+\emph on
+clock 
+\emph default
+de circuitos sincrónicos, generacion de señales de FM, generación de funciones
+ y el ya estudiado caso del PLL.
+\end_layout
+
+\begin_layout Standard
+Existen dos tipos de VCO's:
+\end_layout
+
+\begin_layout Itemize
+Osciladores armónicos o lineales: Son circuitos lineales con salida senoidal,
+ en cuya implementación más tipica incluyen una estructura de 
+\begin_inset Quotes fld
+\end_inset
+
+tanque
+\begin_inset Quotes frd
+\end_inset
+
+ LC (un paralelo) cuya capacitancia es en realidad variable con la tensión,
+ como puede ser un diodo varactor.
+ Cabe destacar que esta estructura no es inmediata de implementar a bajas
+ frecuencias ya que dicho capacitor es de valores bajos, por lo que la resonanci
+a del tanque se encontraría lejos de la frecuencia de operación.
+\end_layout
+
+\begin_layout Itemize
+Osciladores de relajación: Estos son osciladores no lineales, en cuya salida
+ se encuentra una señal periódica (en general cuadrada o rectangular)\SpecialChar \@.
+ En
+ su implementación se encuentran dispositivos como comparadores, transistores
+ o diodos que suelen funcionar conmutando de forma tal de obtener la salida
+ deseada.
+\end_layout
+
+\begin_layout Standard
+En este apartado se enfatizará el segundo caso, ya que más adelante en su
+ implementación será el aplicado.
+ Existen varias implementaciones posibles, pero en el caso mas general se
+ encuentra una estructura básica que conciste en la carga y descarga de
+ un capacitor cuya alternancia depende de un umbral y una constante de tiempo.
+ Dado que, como se dijo, el circuito es no lineal, no es una tarea fácil
+ encarar una descripción matemática del mismo y por lo tanto la explicación
+ será paso a paso.
+\end_layout
+
+\begin_layout Standard
+Supóngase que se desea implementar un oscilador de relajación con salida
+ cuadrada y triangular.
+ Por lo que se sabe hasta ahora, se necesita un elemento de comparación
+ y un circuito que, en función del criterio del anterior, cargue y descargue
+ un capacitor.
+ Para ir un paso más hacia la alimentación, y como sugerencia inmediata,
+ el circuito comparador puede ser implementado con un 
+\emph on
+Schmidt-trigger
+\emph default
+, ya que con lo visto hasta ahora, cumple con los requerimientos.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\emph on
+Schmidt trigger 
+\emph default
+inversior
+\emph on
+ 
+\emph default
+a utilizar en el corriente análisis
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Como se sabe, tomando V
+\emph on
+
+\begin_inset Formula $_{ref}$
+\end_inset
+
+
+\emph default
+=0, se obtienen las tensiones de umbral:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{HI}=V_{cc}\frac{R1}{R2+R1};V_{LO}=V_{ee}\frac{R1}{R2+R1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Donde V
+\begin_inset Formula $_{HI}$
+\end_inset
+
+ y V
+\begin_inset Formula $_{LO}$
+\end_inset
+
+ corresponden a las tensiones de umbral (supuestas simétricas alrededor
+ de 0), V
+\begin_inset Formula $_{cc}$
+\end_inset
+
+ y V
+\begin_inset Formula $_{ee}$
+\end_inset
+
+ son las tensiones de alimentación positiva y negativa del amplificador
+ operacional.
+ A la salida de este dispositivo no se puede encontrar otro valor que no
+ sea V
+\begin_inset Formula $_{HI}$
+\end_inset
+
+ o V
+\begin_inset Formula $_{LO}$
+\end_inset
+
+, por lo que si este es el dispositivo que se utilizará como conmutador
+ y se supone que la señal de salida es periódica, a 
+\emph on
+priori
+\emph default
+ se puede decir que a la salida de este dispositivo (sea lo que sea que
+ reste implementar) estará la salida cuadrada.
+\end_layout
+
+\begin_layout Standard
+Como se dijo, aparte de este bloque se necesita de otro cuya función sea
+ la carga y descarga de un capacitor para trabajar en conjunto con el 
+\emph on
+schmidt-trigger
+\emph default
+ inversor.
+ Existe un bloque genérico que se utiliza en la mayoría de los circuitos
+ de este tipo:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Circuito de carga y descarga del capacitor.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Para abordar el análisis del circuito anterior, supongase que el amplificador
+ operacional está siempre realimentado negativamente; el capacitor nunca
+ se carga.
+ Entonces el amplificador operacional siempre cumplirá la tarea de acercar
+ la tensión del nodo V
+\begin_inset Formula $^{-}$
+\end_inset
+
+ a la del nodo V
+\begin_inset Formula $^{+}$
+\end_inset
+
+, que como se puede el divisor resistivo hace que sea 
+\begin_inset Formula $\frac{V_{in}}{2}$
+\end_inset
+
+ .
+ Si se observa a la configuración que rodea al amplificador operacional
+ como una transconductancia, se puede describir el siguiente comportamiento:
+ Supóngase que el 
+\emph on
+schmidt-trigger 
+\emph default
+está en estado bajo.
+ Entonces, el transistor estará en estado de corte, por lo que por el mismo
+ no circulará corriente.
+ Dado que se supone que el capacitor no está cargado, el amplificador operaciona
+l tendrá una salida tal que en V
+\begin_inset Formula $^{-}$
+\end_inset
+
+ haya la misma tensión que en V
+\begin_inset Formula $^{+}$
+\end_inset
+
+, es decir, 
+\begin_inset Formula $\frac{V_{in}}{2}$
+\end_inset
+
+.
+ Si esto es así, entonces la corriente que circulará por el capacitor será:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{V_{in}-\frac{V_{in}}{2}}{R}=\frac{V_{in}}{2R}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Con lo que la tensión en el terminal correspondiente al schmidth trigger
+ del capacitor será cada vez más negativa (dado que la corriente es constante,
+ esta tensión subirá en forma de recta), hasta el punto que se cruce V
+\begin_inset Formula $_{LO}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Una vez cruzado V
+\begin_inset Formula $_{LO}$
+\end_inset
+
+, el transistor pasa de estar en estado de corte a estar en estado de saturación
+, por lo que presenta muy baja impedancia.
+ La corriente a través del capacitor ahora será:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{V_{in}}{2R}-\frac{\frac{V_{in}}{2}}{0.5R}=\frac{V_{in}}{2R}-\frac{V_{in}}{R}=-\frac{V_{in}}{2R}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Obteniendo una corriente de mismo módulo y sentido opuesto.
+ Esto quiere decir que de la misma forma y con la misma pendiente con la
+ cual el capacitor se cargó, esta vez se descarga, hasta nuevamente hacer
+ conmutar al 
+\emph on
+schmidt-trigger 
+\emph default
+y comenzar el ciclo nuevamente.
+ Si se midiera la salida del amplificador operacional, se vería la deseada
+ señal triangular.
+\end_layout
+
+\begin_layout Subsection
+Aplicación
+\end_layout
+
+\begin_layout Subsubsection
+Cálculos teóricos
+\end_layout
+
+\begin_layout Standard
+Con lo visto hasta ahora, la idea es implementar un oscilador controlado
+ por tensión que, con una entrada de 0 a 5 volt regule una frecuencia de
+ salida de 1 a 10 kHz senoidal de 1 V
+\begin_inset Formula $_{pp}$
+\end_inset
+
+.
+ La amplitud y el valor medio es fácilmente regulable con una etapa de salida
+ con la forma de un sumador (con un sumando que sea la señal y otro que
+ sea un nivel de DC).
+ Para que la salida se corresponda con la entrada cumpliendo la relación
+ pedida, se debe calcular R y C.
+ Para esto, se sabe que la relación entre la tensión y la frecuencia es
+ lineal, entonces se plantea
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{in}=af+b
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Para encontrar los valores que determinan 
+\begin_inset Formula $a$
+\end_inset
+
+ y 
+\begin_inset Formula $b$
+\end_inset
+
+, se busca la relación entre la tensión de entrada, los componentes del
+ circuito y la frecuencia resultante.
+ Dado que en la parte anterior se llegó a que la triangular está a la salida
+ del capacitor de realimentación del amplificador operacional, se comienza
+ con:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{cap}=\frac{1}{C}\intop i(t)dt
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Dado que, nuevamente por lo visto antes, i(t) es constante en los intervalos
+ de carga y descarga, entonces resulta:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{cap}=\frac{1}{C}I\frac{\tau}{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Donde 
+\begin_inset Formula $\tau$
+\end_inset
+
+ es el período de la señal de salida.
+ Como se obtuvo anteriormente, I es igual a 
+\begin_inset Formula $\frac{V_{in}}{2R}$
+\end_inset
+
+, y dado que las tensiones en las que el circuito conmuta la carga y descarga
+ del capacitor corresponden a V
+\begin_inset Formula $_{HI}$
+\end_inset
+
+ y V
+\begin_inset Formula $_{LO}$
+\end_inset
+
+, se reemplaza Vc
+\begin_inset Formula $_{cap}$
+\end_inset
+
+ por la diferencia entre estas.
+ A dicha diferencia se la llamará V
+\begin_inset Formula $_{gap}$
+\end_inset
+
+, con lo cual
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{HI}-V_{LO}=V_{GAP}=\frac{V_{in}\tau}{4CR}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Si se toma 
+\begin_inset Formula $\tau=\frac{1}{f}$
+\end_inset
+
+, y se agrega un término independiente (que hasta ahora viene valiendo 0),
+ se obtiene:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{in}=4CRV_{GAP}f+b
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Para la corriente aplicación, se pueden reemplazar suficientes valores como
+ para obtener la ecuacion de la recta en cuestión.
+ En primer lugar, para que la salida tenga una amplitud de 1 volt, se toman
+ 2 volt para que exista un márgen de ajuste.
+ En segundo lugar, se sabe que la variación de la tensión de entrada se
+ debe tomar entre 0 y 5 volt.
+ Con esta variación, la frecuencia de salida debe variar linealmente entre
+ 1 y 10 kHz.
+ Para cumplir este requisito, se plantean las ecuaciones de la recta de
+ la forma:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+0.5=8000CR+b
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+4.5=80000CR+b
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Tomando un márgen de 0.5 volt sobre el mínimo y por debajo del máximo.
+ Se obtiene:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+CR=5.5\cdot10^{-5}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+b=50mV
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Donde 
+\begin_inset Formula $b$
+\end_inset
+
+ es un nivel de DC sobre el cual debe montarse la señal de entrada de forma
+ tal de cumplir las especificaciones.
+ Se concluye que sin agregar el 
+\emph on
+offset 
+\emph default
+circuitalmente, aún se cumple el requerimiento especificado.
+\end_layout
+
+\begin_layout Standard
+Una vez obtenida la salida triangular, es requerido transformar esta en
+ senoidal.
+ Dado que la frecuencia de la señal es variable, no es viable (o al menos
+ no es la mejor idea) implementar circuitos lineales con este fin (e.g., filtro
+ pasabajos o pasabanda).
+ Entonces se implementa el siguiente circuito:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+La idea de este circuito es que la señal que entra al par diferencial (en
+ el nodo entre R
+\begin_inset Formula $_{7}$
+\end_inset
+
+ y R
+\begin_inset Formula $_{8}$
+\end_inset
+
+) esté en el rango en el que el transistor deja de comportarse linealmente
+ (aproximadamente 400mV
+\begin_inset Formula $_{pp}$
+\end_inset
+
+).
+ Para asegurarse de que la amplitud de la señal corresponda a la necesaria
+ para entrar en esta zona de trabajo, se modula el efecto del divisor resistivo
+ R
+\begin_inset Formula $_{7}$
+\end_inset
+
+-R
+\begin_inset Formula $_{8}$
+\end_inset
+
+ utilizando R
+\begin_inset Formula $_{7}$
+\end_inset
+
+ variable.
+ En los bjt (Bipolar Junction Transistor) esta curva es suave, y con esa
+ suavidad se elimina el pico de la triangular.
+ Al eliminar dicho pico, lo unico que se mantiene de la señal original es
+ la curva cercana al cruce por el valor medio, que en la senoidal y en la
+ triangular dicha curva es igual (por el primer término de la serie de 
+\emph on
+Taylor
+\emph default
+ de la señal senoidal).
+ Para la correcta polarización de los transistores, R
+\begin_inset Formula $_{3}$
+\end_inset
+
+=R
+\begin_inset Formula $_{5}$
+\end_inset
+
+=10 000, R
+\begin_inset Formula $_{2}$
+\end_inset
+
+ = 390.
+ Dado que 
+\begin_inset Formula $Q_{1}$
+\end_inset
+
+
+\begin_inset Formula $\neq Q_{2}$
+\end_inset
+
+, con R
+\begin_inset Formula $_{1}$
+\end_inset
+
+ se calibran los I
+\begin_inset Formula $_{CQ_{1,2}}$
+\end_inset
+
+ (la corriente de trabajo de los transistores) tal que sean lo más similares
+ posibles.
+ Para tomar la salida del diferencial, se utiliza un amplificador diferencial.
+\end_layout
+
+\begin_layout Standard
+Con esta configuración, en la senoidal obtenida alcanza buenos estánderes
+ (utilizando como parámetro de referencia el parámetro THD, o 
+\emph on
+total harmonic distortion
+\emph default
+), cuyos detalles en conjunto con la implementación y otros resultados se
+ detallan a continuación.
+\end_layout
+
+\begin_layout Subsubsection
+Implementación
+\end_layout
+
+\begin_layout Standard
+A partir del marco teórico y de los cálculos para el caso particular, se
+ implementa un circuito que exponga todos los aspectos descriptos hasta
+ el momento.
+ Aparte, como se mencionó anteriormente, se agregó al final una etapa de
+ ganancia al final cuya función es corregir el valor medio de la senoidal
+ de salida y hacer que esta tenga la amplitud deseada.
+\end_layout
+
+\begin_layout Standard
+A continuación se presentan algunas mediciones que fueron consideradas caractéri
+sticas y netamente descriptivas del dispositivo realizado.
+ Cabe destacar que las primeras son imágenes extraidas del osciloscopio,
+ en cuyo caso la senoidal lograda fue a simple vista.
+ Esta calibración debe ser realizada con ayuda de un analizador de espectros
+ para ser precisa, y esta última medición se adjunta al final junto con
+ el mejor valor logrado.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename imágenes/mediciones/1k-muchas ondas.png
+	scale 65
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Salida con la frecuencia mínima pedida - 1kHz.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename imágenes/mediciones/salida-3.5khzunpar.png
+	scale 65
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Salida de 3.5 kHz
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename imágenes/mediciones/8k-unpar.png
+	scale 65
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Salida de 8 kHz
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename imágenes/mediciones/10k-unpar.png
+	scale 65
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Salida de 10 kHz
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Como se mencionó, estas salidas no son las mejores senoidales (en cuanto
+ a distorsión armónica) que se pueden lograr a partir del dispositivo construido.
+ Para esto, hace falta la calibración con asistencia del analizador de espectros.
+ A continuación se adjunta la medición realizada:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename imágenes/mediciones/THDbueno-8.5k.png
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Medición tras la calibración asistida por el analizador de espectros.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
