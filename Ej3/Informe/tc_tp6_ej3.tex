@@ -3,6 +3,142 @@
 \begin{document}
 
 %capítulo
-\chapter{VCO}
+\chapter{Dise\~no de VCO}
 
+En esta secci\'on, se propondr\'a una implementaci\'on de un oscilador controlado por tensi\'on, mejor conocido como VCO (por sus siglas en ingl\'es: \textit{voltage-controlled oscillator}). El mismo recibir\'a como entrada una tensi\'on constante de entre 0V y 5V, y producir\'a a la salida una se\~nal senoidal de 1V de amplitud, cuya frecuencia variar\'a linealmente seg\'un la tensi\'on de entrada entre 1kHz y 10kHz. 
+
+
+\section{Introducci\'on: el VCO}
+
+\section{Dise\~no}
+
+\begin{figure}[H]
+	\centering
+	\begin{circuitikz}
+		\draw
+		(5,7) node[op amp, yscale=-1] (oa) {}		
+		(10,6.5) node[op amp] (comp) {}			
+		(3,1.5) node[npn, xscale=-1](npn){}		
+		
+		(0,7.5) node[left] {$V_{IN}$}
+		(0,7.5) to [short, o-*] (1,7.5) 
+		to [R = 10k$\Omega$, -*] (3, 7.5)
+		to [short] (oa.+)	
+		(3, 7.5) to [R, l_=10k$\Omega$] (3, 9.5) node[ground, yscale=-1]{}	
+		
+		(1, 7.5) to [short] (1, 6.5)
+		to [R, l_=$2R$, -*] (3, 6.5)
+		to [short] (oa.-)
+		(3, 6.5) to [short, -*] (3, 5.5)
+		to [R = $R$] (npn.C)
+		
+		(comp.-) to [short, -*] (oa.out)
+		to [short] (oa.out) -- ++ (0, -1.5)
+		to [C=$C$] (3, 5.5)
+		
+		(oa.out) to [short, -o] (6.2, 7.5) node[above]{$V_{TR}$}	
+		
+		(comp.+) to [short] (8, 6)
+		to [short, -*] (8,5)
+		to [R, l_=1k$\Omega$] (8,3) node[ground]{}
+		
+		(8,5) to [R, l_=2.2k$\Omega$, -*] (11.5,5)
+		to [short, -*] (11.5, 6.5) to [short] (comp.out)
+		(11.5, 6.5) to [short, -o] (12, 6.5) node[right]{$V_{SQ}$}
+		
+		(11.5, 5) to [short] (11.5, 1.5)
+		to [R=1k$\Omega$] (npn.B)
+		
+		(npn.E) node[ground]{}		
+	;\end{circuitikz}
+	
+	\caption{\textit{Voltage-controlled oscillator} con salidas triangular y cuadrada}
+\end{figure}
+
+%% aca pongo el VCO posta. OH POR DIOS NECESITO MAS ETAPAS
+
+\subsection{Conversor triangular a senoidal}
+
+\begin{figure}[H]
+	\centering
+	\begin{circuitikz}
+		\draw
+		(5,5) node[npn](n1){}		
+		(8,5) node[npn, xscale=-1](n2){}		
+
+		(1.5, 5) node[left]{$V_{TR}$}
+		to [vR=100k$\Omega$, o-*] (4, 5) 
+		to [R, l_=2.2k$\Omega$] (4, 3) node[ground]{}
+		(4,5) to [short] (n1.B)		
+		
+		(n1.E) to [short, -*] (5, 3.5)
+		to [R=390R, -*] (8,3.5)
+		to (n2.E)
+		
+		(5, 3.5) to [short] (5, 1.5)
+		to [R=100k$\Omega$] (8,1.5)
+		to [short] (8, 3.5)
+		
+		(6.5, -1) node[below]{$V_{EE}$}
+		to [R=18k$\Omega$, o-] (6.5, 1.3) node[inputarrow, rotate=90]{}
+		
+ 		(n2.B) to [short, -*] (9,5)
+ 		to [R=2.2k$\Omega$] (9,3) node[ground]{}
+ 		
+ 		(n1.C) to [R=10k$\Omega$] (5,8.5)
+ 		to [short] (8,8.5)
+ 		to [R=10k$\Omega$] (n2.C)
+ 		
+ 		(6.5,8.5) to [short, *-o] (6.5, 9) node[above]{$V_{CC}$}
+ 		
+ 		(11,6) node [op amp, scale=0.5](oa) {}
+ 		(oa.+) to [short, -*] (8, 5.75)
+ 		(oa.-) to [short, -*] (5, 6.25) 		
+ 		(oa.+) to [short] (10, 5.75) node[ground]{}
+ 		
+		(oa.-) to [short] (10, 6.25)
+		to [short, *-] (10, 7)
+		to [vR=5k$\Omega$] (12,7)
+		to [short, -*] (12, 6) 
+		to [short, -o] (12.5,6) node [right]{$V_{OUT}$} 		
+ 		(oa.out) to [short] (12,6)
+ 		
+	;\end{circuitikz}
+	
+	\caption{Conversor de onda triangular a senoidal}
+\end{figure}
+
+\section{Resultados}
+
+\section{Conclusiones}
+
+DIO TODO IMPECABLE VIEJA NI NO VIMO
+
+
+\section{Anexo}
+\subsection{Transformaci\'on lineal [0V;5V] a [1V;10V]}
+
+
+\begin{figure}[H]
+	\centering
+	\begin{circuitikz}
+		\draw
+		(4,3) node[op amp, yscale=-1](oa){}		
+		
+		(0,5) node[left]{+15V} 
+		to [R, l^=$R_1$, o-] (2.8,5)
+		to [short] (oa.+)
+		
+		(0,3.5) node[left]{$V_{IN}$}
+		to [R, l^=$R_2$, o-*] (oa.+)
+		
+		(oa.-) to [short, -*] (2.8,1.5)
+		to [R=$R_4$] (2.8, -0.5) node[ground]{}
+		
+		(2.8, 1.5) to [R=$R_3$] (5.2, 1.5)
+		to [short, -*] (oa.out) 
+		to [short, -o] (5.7, 3) node[right] {$V_{OUT}$} 
+	;\end{circuitikz}
+	\caption{Sumador no inversor}
+\end{figure}
 \end{document}
