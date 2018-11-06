@@ -1,12 +1,12 @@
 Board Information Report
 Filename     : C:\Users\rochi\Google Drive\Materias\Teoría de circuitos\TPs\TC_TP6\Ej3\Placa VCO\tc_tp6_ej3 probando.PcbDoc
-Date         : 04-Nov-18
-Time         : 14:42:18
+Date         : 05-Nov-18
+Time         : 10:13:40
 Time Elapsed : 00:00:00
 
 Routing Information
-    Routing completion, 98.33%
+    Routing completion, 100.00%
     Connections, 60
-    Connections routed, 59
-    Connections remaining, 1
+    Connections routed, 60
+    Connections remaining, 0
 count : 4
