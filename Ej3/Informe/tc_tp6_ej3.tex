@@ -289,9 +289,15 @@ En su totalidad, este circuito cuenta con cuatro resistencias variables. Para ob
 	\item Se lleva la \underline{ganancia} del sistema con el preset de la salida, hasta llevar la tensi\'on final a 1V de amplitud. 
 \end{enumerate}
 
-
+\newpage
 
 \section{Resultados}
+
+Se verific\'o etapa por etapa el correcto funcionamiento del circuito.
+
+\subsection{Transformaci\'on lineal}
+
+Realizando un DC \textit{sweep} y utilizando el modo XY del oscilopio, se midieron las salidas correspondientes para las tensiones del rango especificado por la consigna.
 
 \begin{figure}[H]
 	\centering
@@ -299,11 +305,17 @@ En su totalidad, este circuito cuenta con cuatro resistencias variables. Para ob
 	\caption{Transferencia de la transformaci\'on lineal}
 \end{figure}
 
+Si bien el \textit{offset} se logr\'o obtener de manera precisa, no as\'i la pendiente: no se logra llegar a los 10V te\'oricos con 5V en la entrada. Por lo tanto, se espera que al calibrar el VCO para que la frecuencia correspondiente a 0V sea 1kHz, no se llegue a los 10kHz con 5V, sino con una tensi\'on levemente superior.
+
+\subsection{Oscilador}
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.71]{imagenes/tc_tp6_ej3_st.png}
 	\caption{Transferencia del Schmidt trigger}
 \end{figure}
+
+
+\subsection{Conversi\'on triangular a senoidal}
 
 \begin{table}[H]
 	\centering
@@ -335,6 +347,7 @@ En su totalidad, este circuito cuenta con cuatro resistencias variables. Para ob
 	\end{tabular}
 	\caption{\textit{Jitter} de la salida para distintas tensiones de entrada}
 \end{table}
+
 
 
 
