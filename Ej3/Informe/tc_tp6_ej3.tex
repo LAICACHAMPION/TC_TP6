@@ -270,7 +270,7 @@ A su vez, este par diferencial funcionar\'a apropiadamente si ambos transistores
 
 En este caso, los transistores utilizados fueron dos BC548, puesto que los mismos son espec\'ificos para amplificaci\'on (al contrario del caso anterior).\par 
 
-\begin{figure}
+\begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.8]{imagenes/triang-sin.png}
 	\caption{Conversi\'on de triangular a senoidal utilizando las zonas no lineales del transistor}
@@ -279,6 +279,16 @@ En este caso, los transistores utilizados fueron dos BC548, puesto que los mismo
 
 
 \subsection{Calibraci\'on}
+
+En su totalidad, este circuito cuenta con cuatro resistencias variables. Para obtener una salida que cumpla las caracter\'isticas pedidas, los mismos deben ajustarse en el siguiente orden:
+
+\begin{enumerate}
+	\item Con el preset del VCO se ajusta la \underline{frecuencia} de salida correspondiente a cada tensi\'on de entrada. Por ejemplo, puede conectarse la entrada a \textit{ground} (es decir setear $V_{IN}$ en 0V) y ajustar el preset hasta obtener en la salida una se\~nal de frecuencia 1kHz. Para esto puede observarse tanto la salida final del circuito como las salidas triangular o cuadrada del VCO.
+	\item Se ajusta el preset que se encuentra entre los emisores de los BC548 para lograr \underline{simetr\'ia} en la salida.
+	\item Se ajusta el preset de la entrada del conversor triangular a senoidal hasta obtener una \underline{forma senoidal} en la salida.
+	\item Se lleva la \underline{ganancia} del sistema con el preset de la salida, hasta llevar la tensi\'on final a 1V de amplitud. 
+\end{enumerate}
+
 
 
 \section{Resultados}
