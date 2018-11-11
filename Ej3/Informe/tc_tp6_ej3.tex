@@ -144,7 +144,7 @@ De esta manera, se puede usar un capacitor multicapa y tener una tolerancia del 
 
 En cuanto a los operacionales, se utiliz\'o el integrado TL074. De esta manera, se cubrieron los 4 \textit{opamps} que requerir\'a la totalidad del circuito (como se ver\'a a la brevedad). Se prioriz\'o en la elecci\'on cumplir las recomendaciones del libro \textit{Design with Operational Amplifiers and Analog Integrated Circuits} de Sergio Franco, a saber: un operacional FET con baja corriente de \textit{bias} (65pA) \footnote{Informaci\'on obtenida de la \href{http://www.ti.com/lit/ds/symlink/tl074.pdf}{\underline{\textit{data sheet}}} del operacional (consultado: 08/11/18).} y buen \textit{slew rate} (13$\nicefrac{\mathrm{V}}{\mu\mathrm{s}}$). A su vez, este operacional presenta buenas caracter\'isticas en cuanto al ruido (mejores que las del TL084, por ejemplo), como un 0.003\% de THD, lo cual es fundamental en este circuito si queremos obtener una baja distorsi\'on de la se\~nal final.\par 
 
-Por \'ultimo, el transistor utilizado fue un 2N2222, puesto que est\'a dise\~nado espec\'ificamente para utilizarlo como \textit{switch}. Para limitar la corriente de base del mismo se agreg\'o una resistencia de 1k$\Omega$ entre la misma y el \textit{output} del Schmidt trigger, tal como se ilustra en la figura \ref{fig:vco}. \par
+Por otro lado, el transistor utilizado fue un 2N2222, puesto que est\'a dise\~nado espec\'ificamente para utilizarlo como \textit{switch}. Para limitar la corriente de base del mismo se agreg\'o una resistencia de 1k$\Omega$ entre la misma y el \textit{output} del Schmidt trigger, tal como se ilustra en la figura \ref{fig:vco}. \par
 
 En cuanto a consideraciones adicionales que se tuvieron para mejorar la se\~nal de entrada, se agregaron capacitores de desacople de 100nF entre $V_{CC}$ y $V_{EE}$ y \textit{ground}. Los mismos se colocaron lo m\'as cerca posible del integrado, a fin de contrarrestar los efectos de la inductancia de las pistas de cobre. El prop\'osito de estos capacitores es estabilizar la tensi\'on de alimentaci\'on, lo cual es cr\'itico en este circuito, puesto que la frecuencia depende fuertemente de la misma a trav\'es de la tensi\'on de saturaci\'on. De esta manera, se busc\'o reducir el \textit{jitter} de la salida.\par
 
@@ -278,7 +278,8 @@ En este caso, los transistores utilizados fueron dos BC548, puesto que los mismo
 \end{figure}
 
 
-\subsection{Calibraci\'on}
+\subsection{Calibraci\'on} \label{ssection:cal}
+
 
 En su totalidad, este circuito cuenta con cuatro resistencias variables. Para obtener una salida que cumpla las caracter\'isticas pedidas, los mismos deben ajustarse en el siguiente orden:
 
@@ -308,30 +309,22 @@ Realizando un DC \textit{sweep} y utilizando el modo XY del oscilopio, se midier
 Si bien el \textit{offset} se logr\'o obtener de manera precisa, no as\'i la pendiente: no se logra llegar a los 10V te\'oricos con 5V en la entrada. Por lo tanto, se espera que al calibrar el VCO para que la frecuencia correspondiente a 0V sea 1kHz, no se llegue a los 10kHz con 5V, sino con una tensi\'on levemente superior.
 
 \subsection{Oscilador}
+
+Para verificar el correcto funcionamiento de esta etapa se observ\'o el comportamiento del Schmidt trigger con tensi\'on de entrada constante 0V, midiendo las salidas cuadrada y triangular simult\'aneamente.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.71]{imagenes/tc_tp6_ej3_st.png}
 	\caption{Transferencia del Schmidt trigger}
 \end{figure}
 
+Este comportamiento es consistente con el esperado. Sin embargo, se puede observar que el operacional utilizado no satura de forma sim\'etrica, sino que su m\'axima tensi\'on positiva es de 10.3V, mientras que la m\'inima negativa es de -11.6V. Esto resulta a su vez en un \textit{offset} en la se\~nal triangular. \par
+
+El estudio de las frecuencias de salida para cada tensi\'on de entrada se realiz\'o sobre la se\~nal senoidal de la salida en lugar de sobre estas se\~nales. 
 
 \subsection{Conversi\'on triangular a senoidal}
 
-\begin{table}[H]
-	\centering
-	\begin{tabular}{|c|c|}
-	\hline
-	\begin{tabular}[c]{@{}c@{}}Frecuencia\\   fundamental (kHz)\end{tabular} 	& THD (\%)	\\ \hline \hline
-	1.11                                                                     					& 0.846    		\\ \hline
-	2.92                                                                     					& 0.405    		\\ \hline
-	4.98                                                                    					& 0.252    		\\ \hline
-	6.21                                                                     					& 0.307   		\\ \hline
-	7.68                                                                    					& 1.023    		\\ \hline
-	10.0                                                                     					& 1.478    		\\ \hline
-	\end{tabular}
-	\caption{Distorsi\'on arm\'onica de la salida a distintas frecuencias}
-\end{table}
-
+Habiendo calibrado el circuito de acuerdo a lo explicado en la secci\'on \ref{ssection:cal}, se tomaron las siguientes mediciones de frecuencia para distintas tensiones de entrada, utilizando las mediciones estad\'isticas del osciloscopio para m\'as de 5000 mediciones en todos los casos:
 
 \begin{table}[H]
 	\centering
@@ -348,11 +341,50 @@ Si bien el \textit{offset} se logr\'o obtener de manera precisa, no as\'i la pen
 	\caption{\textit{Jitter} de la salida para distintas tensiones de entrada}
 \end{table}
 
+Se puede apreciar que en todos los casos el desv\'io est\'andar es m\'as de dos \'ordenes de magnitud menor que el valor medio, y la diferencia entre el m\'aximo y el m\'inimo es de alrededor de un 1\%. A su vez, se cumple satisfactoriamente una relaci\'on lineal entre la tensi\'on de entrada y la frecuencia de salida, si bien los defectos de la transformaci\'on lineal previamente explicados no permitieron cubrir la totalidad del rango propuesto, sino un 98.7\% del mismo aproximadamente.\par 
 
+En cuanto a la forma de la se\~nal de salida, se tomaron las siguientes mediciones con el analizador de espectro de audio: 
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|c|c|}
+	\hline
+	\begin{tabular}[c]{@{}c@{}}Frecuencia\\   fundamental (kHz)\end{tabular} 	& THD (\%)	\\ \hline \hline
+	1.11                                                                     					& 0.846    		\\ \hline
+	2.92                                                                     					& 0.405    		\\ \hline
+	4.98                                                                    					& 0.252    		\\ \hline
+	6.21                                                                     					& 0.307   		\\ \hline
+	7.68                                                                    					& 1.023    		\\ \hline
+	10.0                                                                     					& 1.478    		\\ \hline
+	\end{tabular}
+	\caption{Distorsi\'on arm\'onica de la salida a distintas frecuencias}
+\end{table}
 
+El THD se mantuvo debajo del 1.5\% en todos los casos, y menor al 1\% en la mayor\'ia de ellos. Las diferencias pueden deberse a una incorrecta calibraci\'on del circuito. Tambi\'en puede ocurrir que esta calibraci\'on sea susceptible a las variaciones de temperatura: se observ\'o que el integrado y los transistores calentaban (sin llegar a niveles preocupantes) al dejar el circuito funcionando, y puede que no todas las mediciones se hayan tomado a la misma temperatura. Esto afectar\'ia principalmente el comportamiento de los transistores, puesto que hace variar considerablemente su corriente de trabajo y con ella su modelo incremental equivalente.\par
+
+A simple vista, parecer\'ia que la principal componente de la distorsi\'on proviene de una oscilaci\'on que se observaba cuando la se\~nal atravesaba sus m\'aximos y m\'inimos, tal como se observa en la figura \ref{fig:senoidal}.
+
+\begin{figure}[H]
+	\centering
+	\fbox{\includegraphics[scale=0.5]{imagenes/c_6_3_r1.png}}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\fbox{\includegraphics[scale=0.5]{imagenes/c_6_3_r.png}}
+	\caption{Se\~nal de salida y detalle de la oscilaci\'on en su punto m\'aximo}
+	\label{fig:senoidal}
+\end{figure}
+
+\newpage
 \section{Conclusiones}
 
-DIO TODO IMPECABLE VIEJA NI NO VIMO
+Se logr\'o dise\~nar un oscilador controlado por tensi\'on, cuya salida es una senoidal de amplitud 1V y frecuencia entre 1kHz y 10kHz para entradas de entre 0V y 5V. El jitter y el THD obtenidos se mantuvieron dentro de rangos razonables, sobre todo el primero de estos, pero podr\'ian haberse tomado medidas adicionales para mejorar la calidad de la se\~nal, a saber:
+
+\begin{itemize}
+	\item Un filtro pasabajos de frecuencia de corte baja (por ejemplo menor a 50Hz para evitar el ruido inducido de la l\'inea) podr\'ia haber estabilizado la tensi\'on de entrada, resultando en menor jitter. El otro par\'ametro del que depender\'ia fuertemente la estabilidad de la se\~nal es de la tensi\'on de alimentaci\'on, pero este problema s\'i fue evitado mediante el uso de capacitores de desacople en el integrado. 
+	\item Un integrador compensado a la salida podr\'ia haber reducido las oscilaciones observadas en la senoidal, al eliminar los componentes de alta frecuencia de la misma. Este filtro deber\'ia tener una frecuencia de corte de alrededor de 100kHz, de forma tal que las se\~nales de entre 1kHz y 10kHz no se vean afectadas por el mismo.
+\end{itemize}
+
+
 
 \end{document}
