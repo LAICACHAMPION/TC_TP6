@@ -10,7 +10,7 @@ En esta secci\'on, se propondr\'a una implementaci\'on de un oscilador controlad
 
 \section{Introducci\'on: el VCO}
 
-El VCO es un oscilador electr\'onica cuya frecuencia de salida depende de la tensi\'on de entrada recibida. Entre sus aplicaciones se destacan su uso en los PLLs, as\'i como la generaci\'on de funciones en s\'i misma.\par
+El VCO es un oscilador electr\'onico cuya frecuencia de salida depende de la tensi\'on de entrada recibida. Entre sus aplicaciones se destacan su uso en los PLLs, as\'i como la generaci\'on de funciones en s\'i misma.\par
 
 Seg\'un la forma de la se\~nal de salida, los VCOs (as\'i como los osciladores en general) pueden categorizarse como:
 
@@ -89,10 +89,10 @@ En la entrada no inversora del primer operacional, un divisor resistivo fija una
 
 \begin{itemize}
 	\item si el transistor conduce, por la resistencia $R$ circula $\nicefrac{V_{IN}}{2R}$, y por lo tanto por el capacitor debe aportar $\nicefrac{V_{IN}}{4R}$ desde la salida del operacional a la entrada inversora (nuevamente considerando ideal al \textit{opamp}).
-	\item si el transistor no conduce, toda la corriente que llega al terminal no inversor deber\'a seguir por el capacitor, y por lo tanto su valor tambi\'en ser\'a $\nicefrac{V_{IN}}{4R}$, pero en el sentido contrario que en el caso anterior.
+	\item si el transistor no conduce, toda la corriente que llega al terminal no inversor deber\'a seguir por el capacitor, y por lo tanto su valor tambi\'en ser\'a $\nicefrac{V_{IN}}{4R}$, pero en el sentido contrario al caso anterior.
 \end{itemize}
 
-Utilizando la ecuaci\'on fundamental del capacitor $i_C = C \frac{dV_C}{dt}$, se obtiene que:
+Utilizando la ecuaci\'on fundamental del capacitor $i_C = C \cdot \frac{dV_C}{dt}$, se obtiene que:
 \begin{equation}
 	\Delta V_C = \pm \frac{V_{IN}}{4RC}\cdot\Delta t
 	\label{eq:vc}
@@ -102,6 +102,11 @@ Por lo tanto, la salida del primer operacional es una rampa definida por la ecua
 
 \begin{equation}
 	V_{TR} = \frac{V_{IN}}{2} + V_C = \frac{V_{IN}}{2} \cdot (1 \pm \frac{\Delta t}{2RC})
+\end{equation}
+ 
+Por lo tanto las variaciones en $V_{TR}$ est\'an dadas por:
+\begin{equation}
+	\Delta V_{TR} =  V_{IN} \cdot \frac{\Delta t}{4RC}
 	\label{eq:vtr}	
 \end{equation}
 
@@ -114,7 +119,7 @@ Esta tensi\'on est\'a controlada por el segundo \textit{opamp}. Por la retroalim
 	\item si $V^+ < V_{TR}$, entonces $V_{SQ} = -V_{SAT}$. Lo que ocurre con $V^+$ es an\'alogo al caso anterior, de donde se obtiene $V_{TL}$ (tensi\'on de trigger low).
 \end{itemize}
 
-Por lo tanto, la rampa descripta por la ecuaci\'on \ref{eq:vtr} cambiar\'a de pendiente positiva a negativa cuando $V_{TR} = V_{TH}$, y viceversa cuando $V_{TR} = V_{TL}$. Reemplazando entonces $\Delta V$ por $V_{TH} - V_{TL}$ y $\Delta t$ por $\frac{1}{2f_0}$, obtenemos que:
+Por lo tanto, la rampa descripta por la ecuaci\'on \ref{eq:vtr} cambiar\'a de pendiente positiva a negativa cuando $V_{TR} = V_{TH}$, y viceversa cuando $V_{TR} = V_{TL}$. Reemplazando entonces $\Delta V_{TR}$ por $V_{TH} - V_{TL}$ y $\Delta t$ por $\frac{1}{2f_0}$ en la ecuaci\'on \ref{eq:vtr}, obtenemos que:
 
 \begin{equation}
 	f_0 = \frac{V_{IN}}{8\cdot RC\cdot (V_{TH} - V_{TL})}
@@ -142,15 +147,13 @@ Dadas estas consideraciones, se eligieron los valores de los componentes:
 
 De esta manera, se puede usar un capacitor multicapa y tener una tolerancia del 5\% con la cual las otras tecnolog\'ias disponibles no cuentan, y los valores de las resistencias $R$ y $2R$ se aproximaron con una \'unica combinaci\'on serie para cada caso.\par
 
-En cuanto a los operacionales, se utiliz\'o el integrado TL074. De esta manera, se cubrieron los 4 \textit{opamps} que requerir\'a la totalidad del circuito (como se ver\'a a la brevedad). Se prioriz\'o en la elecci\'on cumplir las recomendaciones del libro \textit{Design with Operational Amplifiers and Analog Integrated Circuits} de Sergio Franco, a saber: un operacional FET con baja corriente de \textit{bias} (65pA) \footnote{Informaci\'on obtenida de la \href{http://www.ti.com/lit/ds/symlink/tl074.pdf}{\underline{\textit{data sheet}}} del operacional (consultado: 08/11/18).} y buen \textit{slew rate} (13$\nicefrac{\mathrm{V}}{\mu\mathrm{s}}$). A su vez, este operacional presenta buenas caracter\'isticas en cuanto al ruido (mejores que las del TL084, por ejemplo), como un 0.003\% de THD, lo cual es fundamental en este circuito si queremos obtener una baja distorsi\'on de la se\~nal final.\par 
+En cuanto a los operacionales, se utiliz\'o el integrado TL074. De esta manera, se cubrieron los 4 \textit{opamps} que requerir\'a la totalidad del circuito (como se ver\'a a la brevedad). Se prioriz\'o en la elecci\'on cumplir las recomendaciones del libro \textit{Design with Operational Amplifiers and Analog Integrated Circuits} de Sergio Franco, a saber: un operacional FET con baja corriente de \textit{bias} (65pA\footnote{Informaci\'on obtenida de la \href{http://www.ti.com/lit/ds/symlink/tl074.pdf}{\underline{\textit{data sheet}}} del operacional (consultado: 08/11/18).}) y buen \textit{slew rate} (13$\nicefrac{\mathrm{V}}{\mu\mathrm{s}}$). A su vez, este operacional presenta buenas caracter\'isticas en cuanto al ruido (mejores que las del TL084, por ejemplo), como un 0.003\% de THD, lo cual es fundamental en este circuito si queremos obtener una baja distorsi\'on de la se\~nal final.\par 
 
 Por otro lado, el transistor utilizado fue un 2N2222, puesto que est\'a dise\~nado espec\'ificamente para utilizarlo como \textit{switch}. Para limitar la corriente de base del mismo se agreg\'o una resistencia de 1k$\Omega$ entre la misma y el \textit{output} del Schmidt trigger, tal como se ilustra en la figura \ref{fig:vco}. \par
 
 En cuanto a consideraciones adicionales que se tuvieron para mejorar la se\~nal de entrada, se agregaron capacitores de desacople de 100nF entre $V_{CC}$ y $V_{EE}$ y \textit{ground}. Los mismos se colocaron lo m\'as cerca posible del integrado, a fin de contrarrestar los efectos de la inductancia de las pistas de cobre. El prop\'osito de estos capacitores es estabilizar la tensi\'on de alimentaci\'on, lo cual es cr\'itico en este circuito, puesto que la frecuencia depende fuertemente de la misma a trav\'es de la tensi\'on de saturaci\'on. De esta manera, se busc\'o reducir el \textit{jitter} de la salida.\par
 
 Por \'ultimo, cabe destacar que la impedancia de salida de este circuito es s\'olo la salida de un operacional. Esto es \'util puesto que se debe agregar una etapa de conversi\'on de triangular a senoidal, y dada esta caracter\'istica se puede considerar que las etapas no se cargar\'an entre s\'i. 
-
-\newpage
 
 \subsection{Transformaci\'on lineal [0V; 5V] a [1V; 10V]}
 
@@ -264,7 +267,7 @@ Si bien una se\~nal triangular puede convertirse en una senoidal mediante un fil
 
 Este circuito consiste en un par diferencial, cuya salida est\'a controlada en ganancia por el preset del operacional. El prop\'osito del par diferencial es obtener una transferencia cuyas caracter\'isticas permitan aproximar una senoidal, lo cual se logra explotando las caracter\'siticas no lineales de los transistores, como se ilustra en la figura \ref{fig:curvatransistor}.\par
 
-Sin embargo, esto requiere entrar con exactamente con una triangular de amplitud tal que sea lo suficientemente grande como para superar la zona lineal cercana al origen, pero no lo suficiente como para saturar a los transistores. Si bien sabemos que esto ocurrir\'a con aproximadamente 400mV pico a pico, esto depender\'a fuertemente de los transistores utilizados, y es fundamental que este ajuste sea preciso. A su vez, la tensi\'on de entrada depender\'a de la calibraci\'on que previamente se haya realizado en el VCO. Por esta raz\'on se incluy\'o el preset del divisor resistivo en la entrada. \par
+Sin embargo, esto requiere entrar con una triangular de amplitud tal que sea lo suficientemente grande como para superar la zona lineal cercana al origen, pero no lo suficiente como para saturar a los transistores. Si bien sabemos que esto ocurrir\'a con aproximadamente 400mV pico a pico, esto depender\'a fuertemente de los transistores utilizados, y es fundamental que este ajuste sea preciso. A su vez, la tensi\'on de entrada depender\'a de la calibraci\'on que previamente se haya realizado en el VCO. Por esta raz\'on se incluy\'o el preset del divisor resistivo en la entrada. \par
 
 A su vez, este par diferencial funcionar\'a apropiadamente si ambos transistores est\'an trabajando con la misma corriente de colector en todo momento. Esto es imposible de obtener de manera exacta en dos transistores distintos, y por eso se incluy\'o el segundo preset entre los emisores. \par
 
@@ -287,7 +290,7 @@ En su totalidad, este circuito cuenta con cuatro resistencias variables. Para ob
 	\item Con el preset del VCO se ajusta la \underline{frecuencia} de salida correspondiente a cada tensi\'on de entrada. Por ejemplo, puede conectarse la entrada a \textit{ground} (es decir setear $V_{IN}$ en 0V) y ajustar el preset hasta obtener en la salida una se\~nal de frecuencia 1kHz. Para esto puede observarse tanto la salida final del circuito como las salidas triangular o cuadrada del VCO.
 	\item Se ajusta el preset que se encuentra entre los emisores de los BC548 para lograr \underline{simetr\'ia} en la salida.
 	\item Se ajusta el preset de la entrada del conversor triangular a senoidal hasta obtener una \underline{forma senoidal} en la salida.
-	\item Se lleva la \underline{ganancia} del sistema con el preset de la salida, hasta llevar la tensi\'on final a 1V de amplitud. 
+	\item Se lleva la \underline{ganancia} del sistema a 1V de amplitud con el preset de la salida. 
 \end{enumerate}
 
 \newpage
